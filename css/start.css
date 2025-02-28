@@ -1,0 +1,104 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+.startScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  white-space: nowrap; 
+  font-family: 'pretendard';
+  text-align: left;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  padding: 20px;
+  margin: 0;
+  animation: fadeIn 2s;
+}
+#explain_img {
+
+}
+
+.startScreen h1 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  color: #2c2c8e;
+}
+  
+#explain_1, #explain_2 {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  max-width: 80%;
+}
+  
+#explain_2 {
+  font-weight: bold;
+  margin-bottom: 25rem;
+}
+  
+#startButton {
+  padding: 15px 50px;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  background: linear-gradient(45deg, #2c2c8e, #6363dd);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+  
+#startButton:hover {
+  transform: scale(1.05);
+}
+  
+#startButton:active {
+  transform: scale(0.98);
+}
+  
+#startButton::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: rotate(45deg);
+  transition: all 0.4s;
+  opacity: 0;
+}
+  
+#startButton:hover::before {
+  animation: shine 1.5s;
+}
+    
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+  
+@keyframes shine {
+  0% {
+    opacity: 0;
+    left: -50%;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    left: 150%;
+  }
+}

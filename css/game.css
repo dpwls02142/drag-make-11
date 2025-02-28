@@ -1,0 +1,66 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    -webkit-user-select: none !important; 
+    -moz-user-select: -moz-none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* screen */
+.gameScreen {
+    display: none;
+}
+
+/* score */
+
+/* timer */
+.timer-container {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+}
+.timer-progress-bar {
+    width: 90%;
+    height: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    position: relative;
+}
+.timer-progress-inner {
+    height: 100%;
+    width: 100%;
+    background-color: #66cc33;
+    transition: width 0.5s ease, background-color 0.5s ease;
+    border-radius: 10px;
+}
+.progress-image {
+    position: absolute;
+    top: -10px;
+    width: 60px; 
+    height: 50px;
+    transition: left 0.5s ease;
+    z-index: 10; 
+    pointer-events: none;
+}
+
+/* footer */
+footer{
+    padding-top: 10px;
+}
+.icon-links img { 
+    width: 24px; 
+    height: 24px; 
+    transition: 0.2s; 
+}
+.icon-links img:hover { 
+    transform: scale(1.1);
+    fill: black;
+}
