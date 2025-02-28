@@ -10,12 +10,18 @@
 <body oncontextmenu="return false" ondragstart="return false" onkeydown="return false">
 
     <!-- 스타팅 화면 -->
-    <div class = "startScreen">
-        <img id="explain_img" src="./img/start.jpg">
-        <h1>지누의 11수 탈출 도전기</h1>
-        <div id="explain_1">수학 천재 케인님이 11을 뭉탱이로 많이 만들어 11수를 안하도록 도와주세요!</div>
-        <div id="explain_2">게임 방법: 마우스를 드래그 하여 2개 이상의 블럭의 합을 11로 만들어주세요.</div>
-        <button id="startButton">start</button>
+    <div class = "start-screen-container">
+        <!-- 이미지 -->
+        <div class="img-container">
+            <img id="explain_img" src="./img/start.jpg">
+        </div>
+        <!-- 설명 -->
+        <div class="text-container">
+            <h1>지누의 11수 탈출 도전기</h1>
+            <div id="explain_1">수학 천재 케인님이 11을 뭉탱이로 많이 만들어 11수를 안할 수 있도록 도와주세요!</div>
+            <div id="explain_2">게임 방법: 마우스를 드래그 하여 2개 이상의 블럭의 합을 11로 만들어주세요.</div>
+            <button id="startButton">start</button>
+        </div>
     </div>
 
     <!-- 게임 화면 -->
