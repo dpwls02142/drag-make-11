@@ -1,5 +1,3 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-
 .start-screen-container {
   display: flex;
   align-items: flex-start;
@@ -38,7 +36,6 @@
 
   text-align: right;
   white-space: nowrap;
-  font-family: 'pretendard';
 }
 
 .text-container h1 {

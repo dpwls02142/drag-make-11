@@ -61,7 +61,7 @@ function drawApple(apple) {
     
     // 사과 숫자
     ctx.fillStyle = 'white';
-    ctx.font = '30px Arial';
+    ctx.font = '30px pretendard';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(number, x + getAppleSize() / 2, y + getAppleSize() / 2);
@@ -203,7 +203,7 @@ function endGame() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.fillStyle = 'white';
-    ctx.font = '50px Arial';
+    ctx.font = '50px pretendard';
     ctx.textAlign = 'center';
     ctx.fillText(`${score}점 오옹 나이스~`, canvas.width / 2, canvas.height / 2);
 }
