@@ -95,7 +95,7 @@ function drawSelectionRect(startX, startY, endX, endY) {
         ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
         ctx.fillStyle = 'rgba(255, 0, 0, 0.2)'; 
     } else {
-        ctx.strokeStyle = 'rgba(21, 21, 24, 0.5)'; 
+        ctx.strokeStyle = 'rgba(92, 92, 103, 0.35)'; 
         ctx.fillStyle = 'rgba(83, 85, 87, 0.39)';
     }
 
@@ -136,7 +136,6 @@ function selectApples(startX, startY, endX, endY) {
         const withinY = apple.y < endY && apple.y + appleSize > startY;
         return withinX && withinY && apple.visible;
     });
-    
     drawBoard();
     drawSelectionRect(startX, startY, endX, endY);
 }
@@ -169,7 +168,7 @@ function updateScore(points) {
 }
 
 
-// 타이머 업데이트 함수 수정
+// 타이머
 function updateTimerDisplay() {
     timerDisplay.textContent = `남은 시간: ${timeLimit}초`;
     
@@ -177,7 +176,7 @@ function updateTimerDisplay() {
     const progressPercentage = (timeLimit / INITIAL_TIME_LIMIT) * 100;
     timerProgress.style.width = `${progressPercentage}%`;
     
-    // 이미지 위치 업데이트 - 여기가 중요
+    // 이미지 위치 업데이트
     const progressImage = document.getElementById('progressImage');
     progressImage.style.left = `${progressPercentage}%`; // 백분율에 맞게 이동
     
@@ -212,7 +211,7 @@ function endGame() {
     clearInterval(timerInterval);
     timerDisplay.textContent = 'ㅅㄱㅇ';
     
-    // 종료 화면 표시
+    // 종료 화면
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
@@ -222,19 +221,57 @@ function endGame() {
     ctx.fillText(`${score}점 오옹 나이스~`, canvas.width / 2, canvas.height / 2);
 }
 
-// 이벤트 리스너 설정
+const appleSize = getAppleSize();
+
+// 좌표를 그리드 인덱스로 변환
+function getGridIndex(x, y) {
+    return { row: Math.floor(y / appleSize), col: Math.floor(x / appleSize) };
+}
+
+// 그리드 인덱스를 좌표로 변환
+function getCoordinates(row, col) {
+    return { x: col * appleSize, y: row * appleSize };
+}
+
+// 특정 위치에 사과가 있는지 확인
+function hasVisibleAppleAt(x, y) {
+    const { row, col } = getGridIndex(x, y);
+    const appleSize = getAppleSize();
+    
+    // 해당 위치에 있는 사과 찾기
+    const apple = apples.find(a => 
+        Math.floor(a.x / appleSize) === col && 
+        Math.floor(a.y / appleSize) === row
+    );
+    
+    return apple && apple.visible;
+}
+
+// 이벤트 리스너
 canvas.addEventListener('mousedown', (e) => {
     if (isGameOver) return;
+    
+    // 클릭한 위치에 사과가 있을 때만
+    if (!hasVisibleAppleAt(e.offsetX, e.offsetY)) return;
     isDragging = true;
-    startX = e.offsetX;
-    startY = e.offsetY;
+    
+    const { row, col } = getGridIndex(e.offsetX, e.offsetY);
+    const coords = getCoordinates(row, col);
+    
+    startX = coords.x;
+    startY = coords.y;
     selectedApples = [];
 });
 
 canvas.addEventListener('mousemove', (e) => {
     if (!isDragging || isGameOver) return;
-    const endX = e.offsetX;
-    const endY = e.offsetY;
+    
+    const { row, col } = getGridIndex(e.offsetX, e.offsetY);
+    const coords = getCoordinates(row, col);
+    
+    const endX = coords.x + getAppleSize(); // 셀 전체를 포함하도록 끝 좌표 조정
+    const endY = coords.y + getAppleSize();
+    
     selectApples(
         Math.min(startX, endX), 
         Math.min(startY, endY),
