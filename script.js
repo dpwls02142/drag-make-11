@@ -169,13 +169,13 @@ function removeApples() {
 // 점수 업데이트
 function updateScore(points) {
     score += points;
-    scoreDisplay.textContent = `점수: ${score}`;
+    scoreDisplay.textContent = `${score}점`;
 }
 
 
 // 타이머
 function updateTimerDisplay() {
-    timerDisplay.textContent = `남은 시간: ${timeLimit}초`;
+    timerDisplay.style.display = 'none';
     
     // 진행 바 업데이트
     const progressPercentage = (timeLimit / INITIAL_TIME_LIMIT) * 100;
