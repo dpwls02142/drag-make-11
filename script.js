@@ -22,8 +22,8 @@ let isDragging = false;
 let startX, startY;
 
 startButton.addEventListener('click', () => {
-    document.querySelector('.startScreen').style.display = 'none';
-    document.querySelector('.gameScreen').style.display = 'block';
+    document.querySelector('.start-screen-container').style.display = 'none';
+    document.querySelector('.game-screen').style.display = 'block';
     initGame();
     playBGM();
 });
@@ -236,6 +236,6 @@ canvas.addEventListener('mouseup', () => {
 
 // 페이지 로드 시 초기화 (시작 화면만 표시)
 window.onload = () => {
-    document.querySelector('.gameScreen').style.display = 'none';
-    document.querySelector('.startScreen').style.display = 'flex';
+    document.querySelector('.game-screen').style.display = 'none';
+    document.querySelector('.start-screen-container').style.display = 'flex';
 };
