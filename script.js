@@ -95,7 +95,7 @@ function drawSelectionRect(startX, startY, endX, endY) {
         ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
         ctx.fillStyle = 'rgba(255, 0, 0, 0.2)'; 
     } else {
-        ctx.strokeStyle = 'rgba(21, 21, 24, 0.5)'; 
+        ctx.strokeStyle = 'rgba(92, 92, 103, 0.35)'; 
         ctx.fillStyle = 'rgba(83, 85, 87, 0.39)';
     }
 
@@ -129,14 +129,18 @@ function initApples() {
 
 // 선택 영역 내의 사과 선택
 function selectApples(startX, startY, endX, endY) {
-    const appleSize = canvas.width / COLS;
+    const appleSize = getAppleSize();
     
     selectedApples = apples.filter(apple => {
-        const withinX = apple.x < endX && apple.x + appleSize > startX;
-        const withinY = apple.y < endY && apple.y + appleSize > startY;
+        // 셀 중앙이 선택 영역 안에 있는지 확인
+        const appleCenterX = apple.x + (appleSize / 2);
+        const appleCenterY = apple.y + (appleSize / 2);
+        
+        const withinX = appleCenterX >= startX && appleCenterX < endX;
+        const withinY = appleCenterY >= startY && appleCenterY < endY;
+        
         return withinX && withinY && apple.visible;
     });
-    
     drawBoard();
     drawSelectionRect(startX, startY, endX, endY);
 }
@@ -169,7 +173,7 @@ function updateScore(points) {
 }
 
 
-// 타이머 업데이트 함수 수정
+// 타이머
 function updateTimerDisplay() {
     timerDisplay.textContent = `남은 시간: ${timeLimit}초`;
     
@@ -177,7 +181,7 @@ function updateTimerDisplay() {
     const progressPercentage = (timeLimit / INITIAL_TIME_LIMIT) * 100;
     timerProgress.style.width = `${progressPercentage}%`;
     
-    // 이미지 위치 업데이트 - 여기가 중요
+    // 이미지 위치 업데이트
     const progressImage = document.getElementById('progressImage');
     progressImage.style.left = `${progressPercentage}%`; // 백분율에 맞게 이동
     
@@ -212,7 +216,7 @@ function endGame() {
     clearInterval(timerInterval);
     timerDisplay.textContent = 'ㅅㄱㅇ';
     
-    // 종료 화면 표시
+    // 종료 화면
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
@@ -222,25 +226,90 @@ function endGame() {
     ctx.fillText(`${score}점 오옹 나이스~`, canvas.width / 2, canvas.height / 2);
 }
 
-// 이벤트 리스너 설정
+const appleSize = getAppleSize();
+
+// 좌표를 그리드 인덱스로 변환
+function getGridIndex(x, y) {
+    return { row: Math.floor(y / appleSize), col: Math.floor(x / appleSize) };
+}
+
+// 특정 위치에 사과가 있는지 확인
+function hasVisibleAppleAt(x, y) {
+    const { row, col } = getGridIndex(x, y);
+    const appleSize = getAppleSize();
+    
+    // 해당 위치에 있는 사과 찾기
+    const apple = apples.find(a => 
+        Math.floor(a.x / appleSize) === col && 
+        Math.floor(a.y / appleSize) === row
+    );
+    
+    return apple && apple.visible;
+}
+
+// 이벤트 리스너
 canvas.addEventListener('mousedown', (e) => {
     if (isGameOver) return;
+    
+    // 클릭한 위치에 사과가 있을 때만
+    if (!hasVisibleAppleAt(e.offsetX, e.offsetY)) return;
     isDragging = true;
+    
+    // 클릭한 정확한 픽셀 위치 저장
     startX = e.offsetX;
     startY = e.offsetY;
+    
+    // 시작 셀 찾기
+    const startCell = getGridIndex(startX, startY);
     selectedApples = [];
+    
+    // 시작 시 첫 번째 셀만 선택
+    const firstApple = apples.find(apple => 
+        Math.floor(apple.x / getAppleSize()) === startCell.col && 
+        Math.floor(apple.y / getAppleSize()) === startCell.row && 
+        apple.visible
+    );
+    
+    if (firstApple) {
+        selectedApples = [firstApple];
+        // 첫 번째 셀만 강조 표시
+        drawBoard();
+        drawSelectionRect(
+            firstApple.x, 
+            firstApple.y, 
+            firstApple.x + getAppleSize(), 
+            firstApple.y + getAppleSize()
+        );
+    }
 });
 
+// mousemove 이벤트 핸들러 수정
 canvas.addEventListener('mousemove', (e) => {
     if (!isDragging || isGameOver) return;
-    const endX = e.offsetX;
-    const endY = e.offsetY;
-    selectApples(
-        Math.min(startX, endX), 
-        Math.min(startY, endY),
-        Math.max(startX, endX), 
-        Math.max(startY, endY)
-    );
+    
+    // 현재 마우스 위치
+    const currentX = e.offsetX;
+    const currentY = e.offsetY;
+    
+    // 그리드 기반으로 선택 영역 조정
+    const startCell = getGridIndex(startX, startY);
+    const currentCell = getGridIndex(currentX, currentY);
+    
+    // 그리드 좌표로 변환
+    const gridMinCol = Math.min(startCell.col, currentCell.col);
+    const gridMaxCol = Math.max(startCell.col, currentCell.col);
+    const gridMinRow = Math.min(startCell.row, currentCell.row);
+    const gridMaxRow = Math.max(startCell.row, currentCell.row);
+    
+    // 그리드 좌표를 픽셀 좌표로 변환하여 선택 영역 계산
+    const appleSize = getAppleSize();
+    const selectionMinX = gridMinCol * appleSize;
+    const selectionMaxX = (gridMaxCol + 1) * appleSize;
+    const selectionMinY = gridMinRow * appleSize;
+    const selectionMaxY = (gridMaxRow + 1) * appleSize;
+    
+    // 이 영역에 있는 사과들 선택
+    selectApples(selectionMinX, selectionMinY, selectionMaxX, selectionMaxY);
 });
 
 canvas.addEventListener('mouseup', () => {
