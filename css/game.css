@@ -48,6 +48,7 @@ body {
 .progress-image {
     position: absolute;
     top: -10px;
+    transform: translateX(-50%);
     width: 60px; 
     height: 50px;
     transition: left 0.5s ease;

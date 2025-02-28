@@ -34,6 +34,7 @@ function initGame() {
     score = 0;
     timeLimit = INITIAL_TIME_LIMIT;
     initApples();
+
     updateTimerDisplay();
     updateScore(0);
     startTimer();
@@ -41,7 +42,27 @@ function initGame() {
 
 // 랜덤 숫자 생성 (1-9)
 function getRandomNumber() {
-    return Math.floor(Math.random() * 10) + 1;
+    return Math.floor(Math.random() * 9) + 1;
+}
+
+// 게임판 그리기
+function drawBoard() {
+    ctx.fillStyle = '#f0f0f0';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    const appleSize = getAppleSize();
+    apples.forEach(apple => {
+        if (!apple.visible) {
+            ctx.fillStyle = '#e0e0e0';
+            ctx.fillRect(apple.x, apple.y, appleSize, appleSize);
+        }
+    });
+
+    apples.forEach(apple => {
+        if (apple.visible) {
+            drawApple(apple);
+        }
+    });
 }
 
 // 사과 그리기
@@ -50,28 +71,26 @@ function drawApple(apple) {
     
     if (!visible) return;
     
-    // 사과 배경
-    ctx.fillStyle = '#ffd3c9';
-    ctx.fillRect(x, y, getAppleSize(), getAppleSize());
+    const size = getAppleSize();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x, y, size, size);
     
-    // 사과 테두리
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(x, y, getAppleSize(), getAppleSize());
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x, y, size, size);
     
-    // 사과 숫자
-    ctx.fillStyle = 'white';
-    ctx.font = '30px pretendard';
+    ctx.fillStyle = '#555555';
+    ctx.font = '22px Pretendard';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(number, x + getAppleSize() / 2, y + getAppleSize() / 2);
+    ctx.fillText(number, x + size / 2, y + size / 2);
 }
 
 // 선택 영역 표시
 function drawSelectionRect(startX, startY, endX, endY) {
     const sum = selectedApples.reduce((acc, apple) => acc + apple.number, 0);
     
-    // 합계에 따른 색상 변경
     if (sum === TARGET_SUM) {
         ctx.strokeStyle = 'rgba(255, 0, 0, 0.8)';
         ctx.fillStyle = 'rgba(255, 0, 0, 0.2)'; 
@@ -79,17 +98,10 @@ function drawSelectionRect(startX, startY, endX, endY) {
         ctx.strokeStyle = 'rgba(21, 21, 24, 0.5)'; 
         ctx.fillStyle = 'rgba(83, 85, 87, 0.39)';
     }
-    
-    // 테두리와 배경 그리기
+
     ctx.fillRect(startX, startY, endX - startX, endY - startY);
     ctx.lineWidth = 2;
     ctx.strokeRect(startX, startY, endX - startX, endY - startY);
-}
-
-// 게임판 그리기
-function drawBoard() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    apples.forEach(apple => drawApple(apple));
 }
 
 // 사과 크기 계산
@@ -139,7 +151,9 @@ function removeApples() {
         const removedCount = selectedApples.length;
         selectedApples.forEach(apple => apple.visible = false);
         updateScore(removedCount);
-        requestAnimationFrame(drawBoard);
+        
+        drawBoard();
+        
         selectedApples = [];
         playDrop();
     } else {
@@ -234,7 +248,7 @@ canvas.addEventListener('mouseup', () => {
     removeApples();
 });
 
-// 페이지 로드 시 초기화 (시작 화면만 표시)
+// 페이지 로드 시 초기화
 window.onload = () => {
     document.querySelector('.game-screen').style.display = 'none';
     document.querySelector('.start-screen-container').style.display = 'flex';
