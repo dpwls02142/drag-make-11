@@ -6,6 +6,7 @@ const timerDisplay = document.getElementById('timer');
 const scoreDisplay = document.getElementById('score');
 const timerProgress = document.getElementById('timerProgressInner');
 const startButton = document.getElementById('startButton');
+const bgmToggleButton = document.getElementById('bgmToggleButton');
 
 const ROWS = 10;
 const COLS = 20;
@@ -18,6 +19,7 @@ let score = 0;
 let isGameOver = false;
 let timeLimit = INITIAL_TIME_LIMIT;
 let timerInterval;
+let isBGMPlaying = true;
 let isDragging = false;
 let startX, startY;
 
@@ -39,6 +41,19 @@ function initGame() {
     updateScore(0);
     startTimer();
 }
+
+// bgm 버튼
+bgmToggleButton.addEventListener('click', () => {
+    if (isBGMPlaying) {
+        stopBGM();
+        bgmToggleButton.textContent = '🔇';
+    } else {
+        playBGM();
+        bgmToggleButton.textContent = '🔊';
+    }
+    isBGMPlaying = !isBGMPlaying;
+});
+
 
 // 랜덤 숫자 생성 (1-9)
 function getRandomNumber() {
