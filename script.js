@@ -9,7 +9,7 @@ const startButton = document.getElementById('startButton');
 
 const ROWS = 10;
 const COLS = 20;
-const INITIAL_TIME_LIMIT = 120;
+const INITIAL_TIME_LIMIT = 10;
 const TARGET_SUM = 11;
 
 let apples = [];
@@ -214,38 +214,34 @@ function startTimer() {
 function endGame() {
     isGameOver = true;
     clearInterval(timerInterval);
-    timerDisplay.textContent = 'ㅅㄱㅇ';
     
-    // 종료 화면
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const finalScoreElement = document.getElementById('final-score');
+    const endingImg = document.querySelector('.ending-img');
+    const retryButton = document.getElementById('retry-button');
     
-    ctx.fillStyle = 'white';
-    ctx.font = '50px pretendard';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${score}점 오옹 나이스~`, canvas.width / 2, canvas.height / 2);
+    // 점수에 따라 이미지 표시
+    if (score >= 1) {
+        endingImg.classList.remove('hidden');
+        finalScoreElement.textContent = `${score}점! 뭉탱대 수석 입학 축하한다맨이야`;
+    } else {
+        endingImg.classList.add('hidden');
+        finalScoreElement.textContent = `${score}점 오옹 나이스~`;
+    }
+    
+    // 게임 오버
+    gameOverScreen.classList.remove('hidden');
+    
+    // 다시하기
+    retryButton.addEventListener('click', resetGame, { once: true });
+}
 
-    // 다시하기 버튼
-    const retryButton = document.createElement('button');
-    retryButton.textContent = '다시하기';
-    retryButton.style.position = 'absolute';
-    retryButton.style.left = '50%';
-    retryButton.style.top = '60%';
-    retryButton.style.transform = 'translate(-50%, -50%)';
-    retryButton.style.padding = '10px 20px';
-    retryButton.style.fontSize = '24px';
-    retryButton.style.backgroundColor = '#ffffff';
-    retryButton.style.border = 'none';
-    retryButton.style.borderRadius = '8px';
-    retryButton.style.cursor = 'pointer';
-    document.body.appendChild(retryButton);
+function resetGame() {
+    const gameOverScreen = document.getElementById('game-over-screen');
+    gameOverScreen.classList.add('hidden');
     
-    // 버튼 클릭 시 게임 초기화
-    retryButton.addEventListener('click', () => {
-        document.body.removeChild(retryButton);
-        initGame();
-        playBGM();
-    });
+    initGame();
+    playBGM();
 }
 
 const appleSize = getAppleSize();
