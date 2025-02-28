@@ -129,11 +129,16 @@ function initApples() {
 
 // 선택 영역 내의 사과 선택
 function selectApples(startX, startY, endX, endY) {
-    const appleSize = canvas.width / COLS;
+    const appleSize = getAppleSize();
     
     selectedApples = apples.filter(apple => {
-        const withinX = apple.x < endX && apple.x + appleSize > startX;
-        const withinY = apple.y < endY && apple.y + appleSize > startY;
+        // 셀 중앙이 선택 영역 안에 있는지 확인
+        const appleCenterX = apple.x + (appleSize / 2);
+        const appleCenterY = apple.y + (appleSize / 2);
+        
+        const withinX = appleCenterX >= startX && appleCenterX < endX;
+        const withinY = appleCenterY >= startY && appleCenterY < endY;
+        
         return withinX && withinY && apple.visible;
     });
     drawBoard();
@@ -228,11 +233,6 @@ function getGridIndex(x, y) {
     return { row: Math.floor(y / appleSize), col: Math.floor(x / appleSize) };
 }
 
-// 그리드 인덱스를 좌표로 변환
-function getCoordinates(row, col) {
-    return { x: col * appleSize, y: row * appleSize };
-}
-
 // 특정 위치에 사과가 있는지 확인
 function hasVisibleAppleAt(x, y) {
     const { row, col } = getGridIndex(x, y);
@@ -255,29 +255,61 @@ canvas.addEventListener('mousedown', (e) => {
     if (!hasVisibleAppleAt(e.offsetX, e.offsetY)) return;
     isDragging = true;
     
-    const { row, col } = getGridIndex(e.offsetX, e.offsetY);
-    const coords = getCoordinates(row, col);
+    // 클릭한 정확한 픽셀 위치 저장
+    startX = e.offsetX;
+    startY = e.offsetY;
     
-    startX = coords.x;
-    startY = coords.y;
+    // 시작 셀 찾기
+    const startCell = getGridIndex(startX, startY);
     selectedApples = [];
+    
+    // 시작 시 첫 번째 셀만 선택
+    const firstApple = apples.find(apple => 
+        Math.floor(apple.x / getAppleSize()) === startCell.col && 
+        Math.floor(apple.y / getAppleSize()) === startCell.row && 
+        apple.visible
+    );
+    
+    if (firstApple) {
+        selectedApples = [firstApple];
+        // 첫 번째 셀만 강조 표시
+        drawBoard();
+        drawSelectionRect(
+            firstApple.x, 
+            firstApple.y, 
+            firstApple.x + getAppleSize(), 
+            firstApple.y + getAppleSize()
+        );
+    }
 });
 
+// mousemove 이벤트 핸들러 수정
 canvas.addEventListener('mousemove', (e) => {
     if (!isDragging || isGameOver) return;
     
-    const { row, col } = getGridIndex(e.offsetX, e.offsetY);
-    const coords = getCoordinates(row, col);
+    // 현재 마우스 위치
+    const currentX = e.offsetX;
+    const currentY = e.offsetY;
     
-    const endX = coords.x + getAppleSize(); // 셀 전체를 포함하도록 끝 좌표 조정
-    const endY = coords.y + getAppleSize();
+    // 그리드 기반으로 선택 영역 조정
+    const startCell = getGridIndex(startX, startY);
+    const currentCell = getGridIndex(currentX, currentY);
     
-    selectApples(
-        Math.min(startX, endX), 
-        Math.min(startY, endY),
-        Math.max(startX, endX), 
-        Math.max(startY, endY)
-    );
+    // 그리드 좌표로 변환
+    const gridMinCol = Math.min(startCell.col, currentCell.col);
+    const gridMaxCol = Math.max(startCell.col, currentCell.col);
+    const gridMinRow = Math.min(startCell.row, currentCell.row);
+    const gridMaxRow = Math.max(startCell.row, currentCell.row);
+    
+    // 그리드 좌표를 픽셀 좌표로 변환하여 선택 영역 계산
+    const appleSize = getAppleSize();
+    const selectionMinX = gridMinCol * appleSize;
+    const selectionMaxX = (gridMaxCol + 1) * appleSize;
+    const selectionMinY = gridMinRow * appleSize;
+    const selectionMaxY = (gridMaxRow + 1) * appleSize;
+    
+    // 이 영역에 있는 사과들 선택
+    selectApples(selectionMinX, selectionMinY, selectionMaxX, selectionMaxY);
 });
 
 canvas.addEventListener('mouseup', () => {
