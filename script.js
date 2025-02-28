@@ -224,10 +224,31 @@ function endGame() {
     ctx.font = '50px pretendard';
     ctx.textAlign = 'center';
     ctx.fillText(`${score}점 오옹 나이스~`, canvas.width / 2, canvas.height / 2);
+
+    // 다시하기 버튼
+    const retryButton = document.createElement('button');
+    retryButton.textContent = '다시하기';
+    retryButton.style.position = 'absolute';
+    retryButton.style.left = '50%';
+    retryButton.style.top = '60%';
+    retryButton.style.transform = 'translate(-50%, -50%)';
+    retryButton.style.padding = '10px 20px';
+    retryButton.style.fontSize = '24px';
+    retryButton.style.backgroundColor = '#ffffff';
+    retryButton.style.border = 'none';
+    retryButton.style.borderRadius = '8px';
+    retryButton.style.cursor = 'pointer';
+    document.body.appendChild(retryButton);
+    
+    // 버튼 클릭 시 게임 초기화
+    retryButton.addEventListener('click', () => {
+        document.body.removeChild(retryButton);
+        initGame();
+        playBGM();
+    });
 }
 
 const appleSize = getAppleSize();
-
 // 좌표를 그리드 인덱스로 변환
 function getGridIndex(x, y) {
     return { row: Math.floor(y / appleSize), col: Math.floor(x / appleSize) };
