@@ -6,6 +6,7 @@ const timerDisplay = document.getElementById('timer');
 const scoreDisplay = document.getElementById('score');
 const timerProgress = document.getElementById('timerProgressInner');
 const startButton = document.getElementById('startButton');
+const bgmToggleButton = document.getElementById('bgmToggleButton');
 
 const ROWS = 10;
 const COLS = 20;
@@ -18,6 +19,7 @@ let score = 0;
 let isGameOver = false;
 let timeLimit = INITIAL_TIME_LIMIT;
 let timerInterval;
+let isBGMPlaying = true;
 let isDragging = false;
 let startX, startY;
 
@@ -39,6 +41,19 @@ function initGame() {
     updateScore(0);
     startTimer();
 }
+
+// bgm 버튼
+bgmToggleButton.addEventListener('click', () => {
+    if (isBGMPlaying) {
+        stopBGM();
+        bgmToggleButton.textContent = '🔇';
+    } else {
+        playBGM();
+        bgmToggleButton.textContent = '🔊';
+    }
+    isBGMPlaying = !isBGMPlaying;
+});
+
 
 // 랜덤 숫자 생성 (1-9)
 function getRandomNumber() {
@@ -113,19 +128,44 @@ function getAppleSize() {
 function initApples() {
     apples = [];
     const appleSize = getAppleSize();
-    
+
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
+            let number = getRandomNumber();
+
+            // 15% 확률로 가로로 11의 합이 되는 경우 생성
+            if (col < COLS - 1 && Math.random() < 0.15) {
+                const complement = TARGET_SUM - number;
+                if (complement > 0 && complement <= 9) {
+                    apples.push({
+                        x: col * appleSize,
+                        y: row * appleSize,
+                        number: number,
+                        visible: true,
+                    });
+                    apples.push({
+                        x: (col + 1) * appleSize,
+                        y: row * appleSize,
+                        number: complement,
+                        visible: true,
+                    });
+                    col++;
+                    continue;
+                }
+            }
+
+            // 일반 랜덤 숫자 추가
             apples.push({
                 x: col * appleSize,
                 y: row * appleSize,
-                number: getRandomNumber(),
+                number: number,
                 visible: true,
             });
         }
     }
     drawBoard();
 }
+
 
 // 선택 영역 내의 사과 선택
 function selectApples(startX, startY, endX, endY) {
@@ -169,13 +209,13 @@ function removeApples() {
 // 점수 업데이트
 function updateScore(points) {
     score += points;
-    scoreDisplay.textContent = `점수: ${score}`;
+    scoreDisplay.textContent = `${score}점`;
 }
 
 
 // 타이머
 function updateTimerDisplay() {
-    timerDisplay.textContent = `남은 시간: ${timeLimit}초`;
+    timerDisplay.style.display = 'none';
     
     // 진행 바 업데이트
     const progressPercentage = (timeLimit / INITIAL_TIME_LIMIT) * 100;
@@ -214,20 +254,41 @@ function startTimer() {
 function endGame() {
     isGameOver = true;
     clearInterval(timerInterval);
-    timerDisplay.textContent = 'ㅅㄱㅇ';
     
-    // 종료 화면
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const finalScoreElement = document.getElementById('final-score');
+    const endingImg = document.querySelector('.ending-img');
+    const retryButton = document.getElementById('retry-button');
     
-    ctx.fillStyle = 'white';
-    ctx.font = '50px pretendard';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${score}점 오옹 나이스~`, canvas.width / 2, canvas.height / 2);
+    // 점수에 따라 이미지 표시
+    if (score >= 100) {
+        endingImg.classList.remove('hidden');
+        finalScoreElement.textContent = `${score}점! 뭉탱대 수석 입학 축하한다맨이야`;
+    } else {
+        endingImg.classList.add('hidden');
+        finalScoreElement.textContent = `${score}점 오옹 나이스~`;
+    }
+    
+    // 게임 오버
+    gameOverScreen.classList.remove('hidden');
+    
+    // 다시하기
+    retryButton.addEventListener('click', resetGame, { once: true });
+}
+
+function resetGame() {
+    const gameOverScreen = document.getElementById('game-over-screen');
+    gameOverScreen.classList.add('hidden');
+
+    isDragging = false;
+    startX = 0;
+    startY = 0;
+
+    initGame();
+    playBGM();
 }
 
 const appleSize = getAppleSize();
-
 // 좌표를 그리드 인덱스로 변환
 function getGridIndex(x, y) {
     return { row: Math.floor(y / appleSize), col: Math.floor(x / appleSize) };

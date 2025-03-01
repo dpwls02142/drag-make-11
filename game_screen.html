@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="./css/game.css">
     <link rel="stylesheet" href="./css/start.css">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    <title>ㅎㅇ</title>
+    <title>지누의 11수 탈출 도전기</title>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onkeydown="return false">
 
@@ -14,7 +14,7 @@
     <div class = "start-screen-container">
         <!-- 이미지 -->
         <div class="img-container">
-            <img id="explain_img" src="./img/start.jpg">
+            <img id="explain_img" src="./img/start.png">
         </div>
         <!-- 설명 -->
         <div class="text-container">
@@ -28,19 +28,37 @@
     <!-- 게임 화면 -->
     <div class="game-screen">
         <div class="timer-container">
+            <div class="timer-write"> TIME </div>
             <div id="timerProgressBar" class="timer-progress-bar">
                 <div id="timerProgressInner" class="timer-progress-inner"></div>
                 <img id="progressImage" src="./img/m.jpg" class="progress-image">
             </div>
+            <div id="timer"></div>
         </div>
-        <div id="timer"></div>
+
+        <button id="bgmToggleButton" class="bgm-toggle-button">🔊</button>
 
         <canvas id="gameCanvas" width="1200" height="600"></canvas>
+        <br>
         <div id="score"></div>
 
+        <div id="game-over-screen" class="hidden">
+            <div class="game-over-content">
+                <h1 id="final-score"></h1>
+                <img class="ending-img hidden" src="./img/ending.png" />
+                <button id="retry-button">다시하기</button>
+            </div>
+        </div>
+        
         <footer>
+            <div class="footer-write">
+                케인님 유튜브 채널: <a href="https://www.youtube.com/@kanetv8">유튜브 바로가기</a>
+                / 케인님 치지직 채널: <a href="https://chzzk.naver.com/live/7b1acb37b35928ff690d011296a9e5ab">치지직 갈껄</a>
+            </div>
+            <br>
             <div class="icon-links">
-                소스코드: <a href="https://github.com/" target="_blank" rel="noopener noreferrer"><img src="./img/github_icon.svg"></a>
+                <div class="source-write">제작자 깃허브: </div>
+                <a href="https://github.com/" target="_blank" rel="noopener noreferrer"><img src="./img/github_icon.svg"></a>
             </div>
         </footer>
     </div>

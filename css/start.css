@@ -41,7 +41,8 @@
 .text-container h1 {
   font-size: 3rem;
   margin-bottom: 1rem;
-  color: #2c2c8e;
+  color: #7c57aa;
+  font-weight: 900;
 }
   
 #explain1, #explain2 {
@@ -56,10 +57,11 @@
   
 #startButton {
   font-size: 1.5rem;
+  font-weight: 900;
   padding: 15px 50px;
   text-transform: uppercase;
 
-  background: linear-gradient(45deg, #2c2c8e, #6363dd);
+  background:#a777e3;
   color: white;
 
   border: none;
