@@ -10,7 +10,7 @@ const bgmToggleButton = document.getElementById('bgmToggleButton');
 
 const ROWS = 10;
 const COLS = 20;
-const INITIAL_TIME_LIMIT = 10;
+const INITIAL_TIME_LIMIT = 120;
 const TARGET_SUM = 11;
 
 let apples = [];
@@ -128,19 +128,44 @@ function getAppleSize() {
 function initApples() {
     apples = [];
     const appleSize = getAppleSize();
-    
+
     for (let row = 0; row < ROWS; row++) {
         for (let col = 0; col < COLS; col++) {
+            let number = getRandomNumber();
+
+            // 15% 확률로 가로로 11의 합이 되는 경우 생성
+            if (col < COLS - 1 && Math.random() < 0.15) {
+                const complement = TARGET_SUM - number;
+                if (complement > 0 && complement <= 9) {
+                    apples.push({
+                        x: col * appleSize,
+                        y: row * appleSize,
+                        number: number,
+                        visible: true,
+                    });
+                    apples.push({
+                        x: (col + 1) * appleSize,
+                        y: row * appleSize,
+                        number: complement,
+                        visible: true,
+                    });
+                    col++;
+                    continue;
+                }
+            }
+
+            // 일반 랜덤 숫자 추가
             apples.push({
                 x: col * appleSize,
                 y: row * appleSize,
-                number: getRandomNumber(),
+                number: number,
                 visible: true,
             });
         }
     }
     drawBoard();
 }
+
 
 // 선택 영역 내의 사과 선택
 function selectApples(startX, startY, endX, endY) {
@@ -236,7 +261,7 @@ function endGame() {
     const retryButton = document.getElementById('retry-button');
     
     // 점수에 따라 이미지 표시
-    if (score >= 1) {
+    if (score >= 100) {
         endingImg.classList.remove('hidden');
         finalScoreElement.textContent = `${score}점! 뭉탱대 수석 입학 축하한다맨이야`;
     } else {
@@ -254,7 +279,11 @@ function endGame() {
 function resetGame() {
     const gameOverScreen = document.getElementById('game-over-screen');
     gameOverScreen.classList.add('hidden');
-    
+
+    isDragging = false;
+    startX = 0;
+    startY = 0;
+
     initGame();
     playBGM();
 }
