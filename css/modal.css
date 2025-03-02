@@ -1,0 +1,108 @@
+#resolution-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.alert-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    width: 70%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(0);
+    animation: slideUp 0.4s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.alert-content h3 {
+    margin-top: 0;
+    color: #222;
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+}
+
+.alert-content p {
+    color: #555;
+    margin: 15px 0;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+#current-width {
+    font-weight: 600;
+    color: #e74c3c;
+    font-size: 16px;
+    background-color: rgba(231, 76, 60, 0.1);
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+#alert-close-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background:#a777e3;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+#alert-close-btn:hover {
+    background-color: #7c57aa;
+}
+
+#alert-close-btn:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 500px) {
+    .alert-content {
+        width: 85%;
+        padding: 25px;
+    }
+
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes alertOut {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.9); }
+}
+
+.alert-closing {
+    animation: alertOut 0.3s ease-in forwards;
+}

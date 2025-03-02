@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/game.css">
     <link rel="stylesheet" href="./css/start.css">
+    <link rel="stylesheet" href="./css/modal.css">
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <title>지누의 11수 탈출 도전기</title>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onkeydown="return false">
+
+    <!-- 해상도 조절 -->
+    <div id="resolution-alert" class="hidden">
+        <div class="alert-content">
+            <h3>잠깐 타임~</h3>
+            <p>브라우저 창의 가로 크기를! <br> 1280px 이상으로 늘려달라맨이야</p>
+            <p id="current-width"></p>
+            <br>
+            <button id="alert-close-btn">알게썩~</button>
+        </div>
+    </div>
 
     <!-- 스타팅 화면 -->
     <div class = "start-screen-container">
@@ -64,5 +76,6 @@
     </div>
 
     <script type="module" src="script.js"></script>
+    <script src="fullscreen.js"></script>
 </body>
 </html>
