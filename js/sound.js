@@ -1,7 +1,7 @@
 const dropSound = new Audio('./sound/remove.mp3');
 const breakSound = new Audio('./sound/break.mp3');
 const backgroundSound = new Audio('./sound/MusMus-BGM-128.mp3');
-const alternativeSound = new Audio('./sound/mm.mp3');   // 변경될 BGM
+const alternativeSound = new Audio('./sound/mm.mp3');
 
 // 기본 브금
 backgroundSound.volume = 0.1;
@@ -46,27 +46,34 @@ function playSound(sound) {
   sound.play()
 }
 
-const inputField = document.createElement("input");
-inputField.type = "text";
-inputField.style.position = "absolute";
-inputField.style.top = "-9999px";
-document.body.appendChild(inputField);
+export function setupEasterEgg() {
+    const inputField = document.createElement("input");
+    inputField.type = "text";
+    inputField.style.position = "absolute";
+    inputField.style.top = "-9999px";
+    document.body.appendChild(inputField);
 
-inputField.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && !isChanged) {
-        const userInput = inputField.value.trim();
-        if (userInput === "뭉탱이") {
-            alternativeSound.play();
-            isChanged = true;
-            isAlternativePlaying = true;
-            backgroundSound.pause();
-            backgroundSound.currentTime = 0;
+    inputField.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !isChanged) {
+            const userInput = inputField.value.trim();
+            if (userInput === "뭉탱이") {
+                alternativeSound.play();
+                isChanged = true;
+                isAlternativePlaying = true;
+                backgroundSound.pause();
+                backgroundSound.currentTime = 0;
+            }
+            inputField.value = "";
         }
-        inputField.value = "";
-    }
-});
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-      inputField.focus();
-  }
-});
+    });
+    
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            inputField.focus();
+        }
+    });
+}
+
+export function isBackgroundMusicPlaying() {
+    return !backgroundSound.paused || isAlternativePlaying;
+}
