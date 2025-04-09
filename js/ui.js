@@ -27,7 +27,6 @@ export function updateTimerDisplay(timerDisplay, timerProgress, progressImage, t
 }
 
 export function showGameOverScreen(gameOverScreen, endingImg, finalScoreElement, score) {
-    // 점수에 따라 이미지 표시
     if (score >= 100) {
         endingImg.classList.remove('hidden');
         finalScoreElement.textContent = `${score}점! 뭉탱대 수석 입학 축하한다맨이야`;
@@ -36,7 +35,6 @@ export function showGameOverScreen(gameOverScreen, endingImg, finalScoreElement,
         finalScoreElement.textContent = `${score}점 오옹 나이스~`;
     }
     
-    // 게임 오버
     gameOverScreen.classList.remove('hidden');
 }
 

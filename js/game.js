@@ -11,9 +11,8 @@ let timerInterval;
 let isDragging = false;
 let startX = 0;
 let startY = 0;
-let isBGMPlaying = false;
 
-export function initGame(canvas, ctx, timerDisplay, scoreDisplay, timerProgress, progressImage) {
+export function initGame(canvas, ctx, timerDisplay, scoreDisplay, timerProgress, progressImage, gameOverCallback) {
     isGameOver = false;
     score = 0;
     timeLimit = INITIAL_TIME_LIMIT;
@@ -24,7 +23,7 @@ export function initGame(canvas, ctx, timerDisplay, scoreDisplay, timerProgress,
     
     updateTimerDisplay(timerDisplay, timerProgress, progressImage, timeLimit);
     score = updateScore(scoreDisplay, 0, 0);
-    startTimer(timerDisplay, timerProgress, progressImage);
+    startTimer(timerDisplay, timerProgress, progressImage, gameOverCallback);
     
     return {
         apples,
@@ -34,27 +33,18 @@ export function initGame(canvas, ctx, timerDisplay, scoreDisplay, timerProgress,
     };
 }
 
-export function resetGame(gameOverScreen, canvas, ctx, timerDisplay, scoreDisplay, timerProgress, progressImage) {
+export function resetGame(gameOverScreen, canvas, ctx, timerDisplay, scoreDisplay, timerProgress, progressImage, gameOverCallback) {
     hideGameOverScreen(gameOverScreen);
 
     isDragging = false;
     startX = 0;
     startY = 0;
 
-    initGame(canvas, ctx, timerDisplay, scoreDisplay, timerProgress, progressImage);
+    initGame(canvas, ctx, timerDisplay, scoreDisplay, timerProgress, progressImage, gameOverCallback);
     playBGM();
 }
 
-export function endGame(scoreDisplay, gameOverScreen, endingImg, finalScoreElement) {
-    isGameOver = true;
-    clearInterval(timerInterval);
-    
-    showGameOverScreen(gameOverScreen, endingImg, finalScoreElement, score);
-    playBreak();
-    stopBGM();
-}
-
-export function startTimer(timerDisplay, timerProgress, progressImage) {
+export function startTimer(timerDisplay, timerProgress, progressImage, gameOverCallback) {
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         --timeLimit;
@@ -62,11 +52,23 @@ export function startTimer(timerDisplay, timerProgress, progressImage) {
         
         if (timeLimit <= 0) {
             clearInterval(timerInterval);
-            return { isGameOver: true };
+            gameOverCallback();
         }
-        
-        return { timeLimit, isGameOver };
     }, 1000);
+    
+    return timerInterval;
+}
+
+export function endGame(scoreDisplay, gameOverScreen, endingImg, finalScoreElement) {
+    isGameOver = true;
+    clearInterval(timerInterval);
+    
+    const finalScore = parseInt(scoreDisplay.textContent);
+    
+    showGameOverScreen(gameOverScreen, endingImg, finalScoreElement, finalScore);
+    
+    playBreak();
+    stopBGM();
 }
 
 export function handleMouseDown(e, canvas, ctx, isGameOver) {
@@ -157,15 +159,5 @@ export function handleMouseUp(scoreDisplay, canvas, ctx, isGameOver) {
         setSelectedApples([]);
         drawBoard(ctx, canvas);
         return { isDragging: false };
-    }
-}
-
-export function toggleBGM(isBGMPlaying) {
-    if (isBGMPlaying) {
-        stopBGM();
-        return false;
-    } else {
-        playBGM();
-        return true;
     }
 }
