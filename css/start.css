@@ -9,7 +9,6 @@
   width: 1200px;
   height: 500px;
   box-sizing: border-box;
-  animation: fadeIn 2s;
 }
 
 .img-container {
@@ -96,17 +95,6 @@
   
 #startButton:hover::before {
   animation: shine 1.5s;
-}
-    
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
   
 @keyframes shine {

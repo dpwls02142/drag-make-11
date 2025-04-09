@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="./css/game.css">
     <link rel="stylesheet" href="./css/start.css">
     <link rel="stylesheet" href="./css/modal.css">
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <title>지누의 11수 탈출 도전기</title>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onkeydown="return false">
@@ -26,7 +25,7 @@
     <div class = "start-screen-container">
         <!-- 이미지 -->
         <div class="img-container">
-            <img id="explain_img" src="./img/start.png">
+            <img id="explain_img" src="./img/start.webp" fetchpriority="high" width="500" height="200" alt="...">
         </div>
         <!-- 설명 -->
         <div class="text-container">
@@ -43,7 +42,7 @@
             <div class="timer-write"> TIME </div>
             <div id="timerProgressBar" class="timer-progress-bar">
                 <div id="timerProgressInner" class="timer-progress-inner"></div>
-                <img id="progressImage" src="./img/m.jpg" class="progress-image">
+                <img id="progressImage" src="./img/m.webp" class="progress-image">
             </div>
             <div id="timer"></div>
         </div>
@@ -56,7 +55,7 @@
         <div id="game-over-screen" class="hidden">
             <div class="game-over-content">
                 <h1 id="final-score"></h1>
-                <img class="ending-img hidden" src="./img/ending.png" />
+                <img class="ending-img hidden" src="./img/ending.webp" />
                 <button id="retry-button">다시하기</button>
             </div>
         </div>
